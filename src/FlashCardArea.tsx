@@ -1,4 +1,26 @@
+import {useState} from "react";
+
 export default function FlashCardArea() {
+    const [showBackCard, setShowBackCard] = useState(false)
+    const [showingCardId, setShowingCardId] = useState(1)
+    const wordsData = [
+        {
+            id: 1,
+            de: "Apfel",
+            en: "Apple"
+        },
+        {
+            id: 2,
+            de: "Gurke",
+            en: "Cucumber"
+        }
+    ]
+
+    function showWord(id: number, language: 'en' | 'de'): string {
+        const word = wordsData.filter((word) => word.id === id)[0]
+        return word[language]
+    }
+
     return (
         <div>
             <div style={{
@@ -9,10 +31,10 @@ export default function FlashCardArea() {
                 flexDirection: "column",
                 alignItems: "center"
             }}>
-                Front Card
-                <button>Show Back Card</button>
+                {showWord(showingCardId, "de")}
+                <button onClick={() => setShowBackCard(true)}>Show Back Card</button>
             </div>
-            <div style={{
+            {showBackCard && <div style={{
                 backgroundColor: "lightblue",
                 width: "300px",
                 height: "300px",
@@ -20,13 +42,14 @@ export default function FlashCardArea() {
                 flexDirection: "column",
                 alignItems: "center"
             }}>
-                Back Card
-            </div>
+                {showWord(showingCardId, "en")}
+            </div>}
             <div style={{display: "flex", justifyContent: "space-between"}}>
-                <button>Again</button>
-                <button>Hard</button>
-                <button>Good</button>
-                <button>Easy</button>
+                <button onClick={() => {
+                    setShowBackCard(false)
+                    setShowingCardId(showingCardId + 1)
+                }}>Next
+                </button>
             </div>
         </div>
     )
