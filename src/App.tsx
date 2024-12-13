@@ -3,9 +3,11 @@ import FlashCardArea from "./FlashCardArea.tsx";
 
 function App() {
     return (
-        <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-            <FlashCardArea></FlashCardArea>
-        </div>
+        <>
+            <div className="flex flex-col items-center h-screen">
+                <FlashCardArea></FlashCardArea>
+            </div>
+        </>
     )
 }
 

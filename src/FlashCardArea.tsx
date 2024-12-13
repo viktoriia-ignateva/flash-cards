@@ -22,35 +22,26 @@ export default function FlashCardArea() {
     }
 
     return (
-        <div>
-            <div style={{
-                backgroundColor: "darkgray",
-                width: "300px",
-                height: "300px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center"
-            }}>
-                {showWord(showingCardId, "de")}
-                <button onClick={() => setShowBackCard(true)}>Show Back Card</button>
+        <>
+            <div
+                className="relative flex flex-col h-80 w-80 mt-24 items-center bg-sky-200 border border-slate-400 rounded-lg">
+                <div className="pt-8">{showWord(showingCardId, "de")}</div>
+                {!showBackCard &&
+                    <button className="absolute -bottom-4 px-4 py-2 bg-cyan-300 border border-slate-400 rounded-lg"
+                            onClick={() => setShowBackCard(true)}> Show Answer
+                    </button>}
+                {showBackCard &&
+                    <div
+                        className="absolute bottom-0 pt-4 flex h-40 w-full justify-center bg-sky-500 border border-slate-400 rounded-lg">
+                        {showWord(showingCardId, "en")}
+                    </div>}
             </div>
-            {showBackCard && <div style={{
-                backgroundColor: "lightblue",
-                width: "300px",
-                height: "300px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center"
-            }}>
-                {showWord(showingCardId, "en")}
-            </div>}
-            <div style={{display: "flex", justifyContent: "space-between"}}>
-                <button onClick={() => {
-                    setShowBackCard(false)
-                    setShowingCardId(showingCardId + 1)
-                }}>Next
-                </button>
-            </div>
-        </div>
+            {showBackCard && <button className="px-4 py-2 mt-4 bg-cyan-300 border border-slate-400 rounded-lg"
+                                     onClick={() => {
+                                         setShowBackCard(false)
+                                         setShowingCardId(showingCardId + 1)
+                                     }}>Next
+            </button>}
+        </>
     )
 }
