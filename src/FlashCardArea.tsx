@@ -1,24 +1,36 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function FlashCardArea() {
     const [showBackCard, setShowBackCard] = useState(false)
     const [showingCardId, setShowingCardId] = useState(1)
-    const wordsData = [
-        {
-            id: 1,
-            de: "Apfel",
-            en: "Apple"
-        },
-        {
-            id: 2,
-            de: "Gurke",
-            en: "Cucumber"
-        }
-    ]
+    const [words, setWords] = useState([])
+
+    useEffect(() => {
+        (async function getWords() {
+            const url = "http://localhost:3000/words";
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const words = await response.json();
+                setWords(words)
+                console.log(words);
+            } catch (error) {
+                console.error(error.message);
+            }
+        })()
+    }, [])
 
     function showWord(id: number, language: 'en' | 'de'): string {
-        const word = wordsData.filter((word) => word.id === id)[0]
-        return word[language]
+        if (words.length > 0) {
+            const word = words.filter((word) => word.id === id)[0]
+            return word[language]
+        } else {
+            return "Loading..."
+        }
     }
 
     return (
