@@ -11,13 +11,13 @@ export default function FlashCardArea() {
 
             try {
                 const response = await fetch(url);
-                if (!response.ok) {
+                if (response.ok) {
+                    const words = await response.json();
+                    setWords(words)
+                    console.log(words);
+                } else {
                     throw new Error(`Response status: ${response.status}`);
                 }
-
-                const words = await response.json();
-                setWords(words)
-                console.log(words);
             } catch (error) {
                 console.error(error.message);
             }
@@ -31,6 +31,10 @@ export default function FlashCardArea() {
         } else {
             return "Loading..."
         }
+    }
+
+    if (showingCardId > words.length && words.length > 0) {
+        return <div className="mt-24">No cards to learn</div>
     }
 
     return (
