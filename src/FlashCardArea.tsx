@@ -7,19 +7,18 @@ export default function FlashCardArea() {
 
     useEffect(() => {
         (async function getWords() {
-            const url = "http://localhost:3000/words";
+            const url = "http://localhost:3000/words"
 
             try {
-                const response = await fetch(url);
+                const response = await fetch(url)
                 if (response.ok) {
-                    const words = await response.json();
+                    const words = await response.json()
                     setWords(words)
-                    console.log(words);
                 } else {
-                    throw new Error(`Response status: ${response.status}`);
+                    throw new Error(`Response status: ${response.status}`)
                 }
             } catch (error) {
-                console.error(error.message);
+                console.error(error.message)
             }
         })()
     }, [])
@@ -33,11 +32,32 @@ export default function FlashCardArea() {
         }
     }
 
-    if (showingCardId > words.length && words.length > 0) {
-        return <div className="mt-24">No cards to learn</div>
+    async function updateWord(id: number, remembered: boolean) {
+        const url = "http://localhost:3000/words/" + id
+
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({remembered: remembered})
+            })
+
+            if (response.ok) {
+                const status = await response.json()
+                console.log(status)
+            } else {
+                throw new Error(`Response status: ${response.status}`)
+            }
+        } catch (error) {
+            console.error(error.message)
+        }
     }
 
-    return (
+    if (showingCardId > words.length && words.length > 0) {
+        return <div className="mt-24">No cards to learn</div>
+    } else return (
         <>
             <div
                 className="relative flex flex-col h-80 w-80 mt-24 items-center bg-sky-200 border border-slate-400 rounded-lg">
@@ -52,12 +72,22 @@ export default function FlashCardArea() {
                         {showWord(showingCardId, "en")}
                     </div>}
             </div>
-            {showBackCard && <button className="px-4 py-2 mt-4 bg-cyan-300 border border-slate-400 rounded-lg"
-                                     onClick={() => {
-                                         setShowBackCard(false)
-                                         setShowingCardId(showingCardId + 1)
-                                     }}>Next
-            </button>}
+            {showBackCard && <div>
+                <button className="px-4 py-2 mt-4 bg-cyan-300 border border-slate-400 rounded-lg"
+                        onClick={() => {
+                            setShowBackCard(false)
+                            setShowingCardId(showingCardId + 1)
+                            updateWord(showingCardId, false)
+                        }}>Don't remember
+                </button>
+                <button className="px-4 py-2 mt-4 bg-cyan-300 border border-slate-400 rounded-lg"
+                        onClick={() => {
+                            setShowBackCard(false)
+                            setShowingCardId(showingCardId + 1)
+                            updateWord(showingCardId, true)
+                        }}>Remember
+                </button>
+            </div>}
         </>
     )
 }
